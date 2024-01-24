@@ -1,0 +1,22 @@
+\documentclass{standalone}
+
+\usepackage{astraeus}
+
+\setmainfont[Scale=1.0]{Tex Gyre Schola}
+\begin{document}
+\begin{tikzpicture}
+\Huge
+\path (-105mm, -148.5mm) -- (105mm, 148.5mm);
+\pic at (-\horizdist,\vertdist) {bosscardfrontprintable={Red}{C}{Cerberus}};
+\pic at (0,\vertdist) {bosscardfrontprintable={Goldenrod}{C}{Cerberus}};
+\pic at (\horizdist,\vertdist) {bosscardfrontprintable={RoyalBlue}{C}{Cerberus}};
+
+\pic at (-\horizdist,0) {bosscardfrontprintable={Red}{H}{Hades}};
+\pic at (0,0) {bosscardfrontprintable={Goldenrod}{H}{Hades}};
+\pic at (\horizdist,0) {bosscardfrontprintable={RoyalBlue}{H}{Hades}};
+
+\pic at (-\horizdist,-\vertdist) {bosscardfrontprintable={gray}{G}{Gate}};
+\pic at (\horizdist,-\vertdist) {bosscardfrontprintable={gray}{E}{Eurydice}};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,23 @@
+\documentclass{standalone}
+
+\usepackage{astraeus}
+
+\setmainfont[Scale=1.0]{Tex Gyre Schola}
+\begin{document}
+\begin{tikzpicture}
+\Huge
+\path (-105mm, -148.5mm) -- (105mm, 148.5mm);
+\pic at (-\horizdist,\vertdist) {trialcardfrontprintable={threestar}{RoyalBlue}{6}};
+\pic at (0,\vertdist) {trialcardfrontprintable={twostar}{RoyalBlue}{6}};
+\pic at (\horizdist,\vertdist) {trialcardfrontprintable={onestar}{RoyalBlue}{6}};
+
+\pic at (-\horizdist,0) {trialcardfrontprintable={threestar}{RoyalBlue}{5}};
+\pic at (0,0) {trialcardfrontprintable={twostar}{RoyalBlue}{5}};
+\pic at (\horizdist,0) {trialcardfrontprintable={onestar}{RoyalBlue}{5}};
+
+\pic at (-\horizdist,-\vertdist) {trialcardfrontprintable={threestar}{RoyalBlue}{4}};
+\pic at (0,-\vertdist) {trialcardfrontprintable={twostar}{RoyalBlue}{4}};
+\pic at (\horizdist,-\vertdist) {trialcardfrontprintable={onestar}{RoyalBlue}{4}};
+
+\end{tikzpicture}
+\end{document}

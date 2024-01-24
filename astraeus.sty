@@ -1,0 +1,246 @@
+\usepackage[dvipsnames]{xcolor}
+\definecolor{SunriseBlue}{HTML}{A1A6CF}
+\definecolor{brass}{HTML}{FEDB4C}
+\definecolor{pine}{HTML}{FCDD68}
+\definecolor{redfabric}{HTML}{CB0222}
+
+\usepackage{contour}
+\contourlength{0.25mm}
+\contournumber{1024}
+
+\usepackage{tikz}
+\usetikzlibrary{math}
+\usetikzlibrary{shapes}
+\usetikzlibrary{calc}
+
+\usepackage{calc}
+\usepackage{fontspec}
+
+\newlength{\cardwidth}
+\newlength{\cardheight}
+\newlength{\bleed}
+\newlength{\horizspace}
+\newlength{\vertspace}
+\newlength{\vertdist}
+\newlength{\horizdist}
+
+\setlength{\cardwidth}{2.5in}
+\setlength{\cardheight}{3.5in}
+\setlength{\bleed}{0.0625in}
+\setlength{\horizspace}{0.0625in}
+\setlength{\horizdist}{\cardwidth + 2\bleed + \horizspace}
+\setlength{\vertspace}{0.0625in}
+\setlength{\vertdist}{\cardheight + 2\bleed + \vertspace}
+
+\tikzset{cardbackpattern/.pic={
+%	\foreach \i in {-1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in}
+%		\foreach \j in {-1.75in, -1.5in, -1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in, 1.5in, 1.75in}
+%			\draw[ultra thick, black] (\i,\j) circle (0.105in);
+%
+%	\foreach \i in {-1.375in, -1.125in, -0.875in,-0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in}
+%		\foreach \j in {-1.875in, -1.625in, -1.375in, -1.125in, -0.875in, -0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in, 1.625in, 1.875in}
+%			\draw[ultra thick, black] (\i,\j) circle (0.105in);
+	\foreach \i in {-1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in}
+		\foreach \j in {-1.75in, -1.5in, -1.25in, -1.0in, -0.75in, -0.5in, -0.25in, 0in, 0.25in, 0.5in, 0.75in, 1.0in, 1.25in, 1.5in, 1.75in}
+			\draw[very thick, #1] (\i,\j) circle (0.105in);
+
+	\foreach \i in {-1.375in, -1.125in, -0.875in,-0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in}
+		\foreach \j in {-1.875in, -1.625in, -1.375in, -1.125in, -0.875in, -0.625in, -0.375in, -0.125in, 0.125in, 0.375in, 0.625in, 0.875in, 1.125in, 1.375in, 1.625in, 1.875in}
+			\draw[very thick, #1] (\i,\j) circle (0.105in);
+
+}}
+
+\tikzset{guidecross/.pic={
+	\draw[#1] (-\bleed,0) -- (\bleed,0);
+	\draw[#1] (0, -\bleed) -- (0, \bleed);
+}}
+
+\tikzset{cutguide/.pic={
+	\pic () at (-\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, \cardheight/2) {guidecross={#1}};
+	\pic () at (-\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+	\pic () at (\cardwidth/2, -\cardheight/2) {guidecross={#1}};
+}}
+
+
+\tikzset{pics/trialcardbackprintable/.style n args={2}{
+	code={
+	\begin{scope}
+	\clip (-\cardwidth/2 - \bleed, 0in) --%
+	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+	      cycle;
+	% Pattern for card back
+	\path[fill=#1] (-\cardwidth/2 - \bleed, 0in) --%
+	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+	      cycle;
+	\pic () at (0,0) {cardbackpattern={#2}};
+	% Cutting guides for corners of the cards	
+	\pic () at (0,0) {cutguide={#1}};
+\end{scope}
+}}}
+
+
+\tikzset{pics/trialcardfrontprintable/.style n args={3}{%
+code={
+		\begin{scope}
+		\clip (-\cardwidth/2 - \bleed, 0in) --%
+		      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+		      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+		      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+		      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+		      cycle;
+
+		% Pattern for card front
+%		\pic () at (0,0) {twoface={#1}{#2}{#3}};	
+		
+		\node(ul) at (-0.9in, 1.4in) {\phantom{#3}\,\scalebox{0.5}{\tikz{\pic {#1={black}};}}\,#3};
+		\node[transform shape, rotate=180](lr) at (0.9in, -1.4in) {\phantom{#3}\,\scalebox{0.5}{\tikz{\pic {#1={black}};}}\,#3};
+
+		\setmainfont[Scale=3.0]{Roboto Slab}
+
+		\draw[line width=0.3ex, rounded corners=3mm, black] (ul) --++ (1.8in, 0) -- (lr);
+		\draw[line width=0.25ex, rounded corners=3mm, #2, shorten >=0.025ex, shorten <=0.025ex] (ul) --++ (1.8in, 0) -- (lr);
+
+		\draw[line width=0.3ex, rounded corners=3mm, black] (lr) --++ (-1.8in, 0) -- (ul);
+		\draw[line width=0.25ex, rounded corners=3mm, #2, shorten >=0.025ex, shorten <=0.025ex] (lr) --++ (-1.8in, 0) -- (ul);
+			
+		\setmainfont[Scale=6.0]{Roboto Slab}
+		\node (c) at (0, 0) {{\contour{black}{\textcolor{#2}{\Large #3}}}};
+			
+		\end{scope}
+		% Cutting guides for corners of the cards	
+		\pic () at (0,0) {cutguide={white}};
+}}}
+
+
+\tikzset{cardoutlinedisplay/.pic={%
+		\begin{scope}
+		\clip[rounded corners=3mm] (-\cardwidth/2, 0in) --%
+		      (-\cardwidth/2, \cardheight/2) --%
+		      (\cardwidth/2, \cardheight/2) --%
+		      (\cardwidth/2, -\cardheight/2) --%
+		      (-\cardwidth/2, -\cardheight/2) --%
+		      cycle;
+		\path[draw, line width=1.5mm, rounded corners=3mm,#1] (-\cardwidth/2, 0in) --%
+		      (-\cardwidth/2, \cardheight/2) --%
+		      (\cardwidth/2, \cardheight/2) --%
+		      (\cardwidth/2, -\cardheight/2) --%
+		      (-\cardwidth/2, -\cardheight/2) --%
+		      cycle;
+		\end{scope}
+}}
+
+\tikzset{pics/bosscardfrontprintable/.style n args={3}{%
+code={
+		\begin{scope}
+		\clip (-\cardwidth/2 - \bleed, 0in) --%
+		      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+		      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+		      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+		      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+		      cycle;
+
+		% Pattern for card front		
+%		\node(ul) at (-0.9in, 1.4in) {\phantom{\scalebox{0.5}{\tikz{\pic {threestar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {twostar={black}};}}\,\textbf{/}\,}\scalebox{0.5}{\tikz{\pic {onestar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {twostar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {threestar={black}};}}};
+%		\node[transform shape, rotate=180](lr) at (0.9in, -1.4in) {\phantom{\scalebox{0.5}{\tikz{\pic {threestar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {twostar={black}};}}\,\textbf{/}\,}\scalebox{0.5}{\tikz{\pic {onestar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {twostar={black}};}}\,\textbf{/}\,\scalebox{0.5}{\tikz{\pic {threestar={black}};}}};
+%		\node(lr) at (0.9in, -1.4in) {Cerberus\phantom{urebreC}};
+		\node at (0,-0.875in) {\LARGE #3};
+
+		\setmainfont[Scale=3.0]{Roboto Slab}
+
+%		\draw[line width=0.3ex, rounded corners=3mm, black] (ul) --++ (1.8in, 0) -- (lr);
+%		\draw[line width=0.25ex, rounded corners=3mm, #1, shorten >=0.025ex, shorten <=0.025ex] (ul) --++ (1.8in, 0) -- (lr);
+%
+%		\draw[line width=0.3ex, rounded corners=3mm, black] (lr) --++ (-1.8in, 0) -- (ul);
+%		\draw[line width=0.25ex, rounded corners=3mm, #1, shorten >=0.025ex, shorten <=0.025ex] (lr) --++ (-1.8in, 0) -- (ul);
+			
+		\draw[line width=0.3ex, rounded corners=3mm, black] (0in, 1.4in) --++ (0.9in, 0) --++ (0in,-2.8in) --++ (-1.8in, 0in) --++ (0in, 2.8in) -- cycle;
+		\draw[line width=0.25ex, rounded corners=3mm, #1] (0in, 1.4in) --++ (0.9in, 0) --++ (0in,-2.8in) --++ (-1.8in, 0in) --++ (0in, 2.8in) -- cycle;;
+
+			
+		\setmainfont[Scale=6.0]{Roboto Slab}
+		\node (c) at (0, 0) {{\contour{black}{\textcolor{#1}{\Large #2}}}};
+
+		\end{scope}
+		% Cutting guides for corners of the cards	
+		\pic () at (0,0) {cutguide={white}};
+}}}
+
+%\tikzset{trialcardfrontdisplay/.pic={%
+%		\begin{scope}
+%		\clip[rounded corners=3mm] (-\cardwidth/2, 0in) --%
+%		      (-\cardwidth/2, \cardheight/2) --%
+%		      (\cardwidth/2, \cardheight/2) --%
+%		      (\cardwidth/2, -\cardheight/2) --%
+%		      (-\cardwidth/2, -\cardheight/2) --%
+%		      cycle;
+%		%\path[draw, line width=1.5mm, rounded corners=3mm] (-\cardwidth/2, 0in) --%
+%		\path[draw, line width=2.0mm, rounded corners=3mm] (-\cardwidth/2, 0in) --%
+%		     (-\cardwidth/2, \cardheight/2) --%
+%		      (\cardwidth/2, \cardheight/2) --%
+%		      (\cardwidth/2, -\cardheight/2) --%
+%		      (-\cardwidth/2, -\cardheight/2) --%
+%		      cycle;
+%
+%		% Pattern for card front
+%		\pic () at (0,0) {#1};				
+%		\end{scope}
+%}}
+
+%\tikzset{pics/trialcardbackdisplay/.style n args={2}{
+%	code={
+%	\begin{scope}
+%	\clip[rounded corners=3mm] (-\cardwidth/2 - \bleed, 0in) --%
+%	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+%	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+%	      cycle;
+%	% Pattern for card back
+%	\path[fill=#1] (-\cardwidth/2 - \bleed, 0in) --%
+%	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+%	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+%	      cycle;
+%	\pic () at (0,0) {cardbackpattern={#2}};
+%	\path[draw, line width=2mm, rounded corners=3mm] (-\cardwidth/2 - \bleed, 0in) --%
+%	      (-\cardwidth/2 - \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, \cardheight/2 + \bleed) --%
+%	      (\cardwidth/2 + \bleed, -\cardheight/2 - \bleed) --%
+%	      (-\cardwidth/2 - \bleed, -\cardheight/2 - \bleed) --%
+%	      cycle;
+%\end{scope}
+%}}}
+
+
+\tikzset{onestar/.pic={
+\node[draw=black, circle, inner sep=0.375cm, line width=2.75mm] at (0,0)  {};
+\node[draw=#1, circle, inner sep=0.375cm, line width=2mm] at (0,0)  {};
+}}
+
+\tikzset{twostar/.pic={
+\node[text=black, rotate=45, inner sep=0pt] at (0,0) {\rule{1.5cm}{3mm}};
+\node[text=black, rotate=-45, inner sep=0pt] at (0,0) {\rule{1.5cm}{3mm}};
+\node[text=#1, rotate=45, inner sep=0pt] at (0,0) {\rule{1.425cm}{2.25mm}};
+\node[text=#1, rotate=-45, inner sep=0pt] at (0,0) {\rule{1.425cm}{2.25mm}};
+
+}}
+
+\tikzset{threestar/.pic={
+\node[inner sep=0pt] at (0,9mm) {};
+\node[regular polygon, regular polygon sides=3, draw=black, line width=2.75mm, inner sep=0.21cm] at (0,0) {};
+\node[regular polygon, regular polygon sides=3, draw=#1, line width=2mm, inner sep=0.21cm] at (0,0) {};
+}}
+
+\tikzset{fourstar/.pic={
+\node[draw=black, diamond, inner sep=0.3cm, line width=2.7mm] at (0,0) {};
+\node[draw=#1, diamond, inner sep=0.2925cm, line width=2.0mm] at (0,0) {};
+}}
+
